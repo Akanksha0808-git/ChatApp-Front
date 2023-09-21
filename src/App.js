@@ -9,7 +9,7 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [username, setUsername] = useState('');
+  const [username] = useState('');
 
   useEffect(() => {
     newSocket.on('chatMessage', (message) => {
