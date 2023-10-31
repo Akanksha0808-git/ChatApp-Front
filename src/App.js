@@ -9,7 +9,7 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [username] = useState('');
+  const [username] = useState(inputUsername);
 
   useEffect(() => {
     newSocket.on('chatMessage', (message) => {
@@ -20,9 +20,11 @@ function App() {
   }, []);
 
   const handleSendMessage = () => {
-
+    if (message.trim() !== '') {
+      // Include the username when sending the message
       socket.emit('chatMessage', `${username}: ${message}`);
       setMessage('');
+    }
   
   };
 
@@ -31,18 +33,21 @@ function App() {
       <div className="header">
        <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu8wTQfQbApFJ2aLLq4tyaGRdpIARwk7uZkQ&usqp=CAU' height="50px" width="50px" alt='img here' className='image'></img>
        
-          <h2>{inputUsername}</h2>
+          <h2>{username}</h2>
       
-        <p>Welcome, {inputUsername}!</p>
+        <p>Welcome, {username}!</p>
       </div>
       <div className="chat">
         <div className="chat-window">
           <div className="chat-messages">
+            
             {messages.map((msg, index) => (
-              <div key={index} className="message">
-                {msg}
+              <div key={index}  className={`message ${msg.startsWith(username) ? 'sender' : 'receiver'}`}>
+                         {msg}
               </div>
             ))}
+          </div>
+          
           </div>
           <div className="chat-input">
             <input
@@ -52,7 +57,6 @@ function App() {
               onChange={(e) => setMessage(e.target.value)}
             />
             <button className='btn' onClick={handleSendMessage}>Send</button>
-          </div>
         </div>
       </div>
     </div>
